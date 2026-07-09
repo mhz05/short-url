@@ -82,9 +82,59 @@ void createShortURL()
 // 解析短地址
 void parseShortURL()
 {
+    char shortUrl[SHORT_URL_LEN];
+    int i;
 
+    // 判断数据库是否为空
+    if (databaseSize == 0)
+    {
+        printf("当前没有任何短地址记录！\n");
+        return;
+    }
+
+    printf("请输入短地址：");
+    scanf("%5s", shortUrl);
+
+    // 遍历数据库查找
+    for (i = 0; i < databaseSize; i++)
+    {
+        // 找到对应短地址
+        if (strcmp(shortUrl, database[i].shortUrl) == 0)
+        {
+            // 判断是否有效
+            if (database[i].valid == 0)
+            {
+                printf("该短地址已失效！\n");
+                return;
+            }
+
+            // 判断是否达到最大访问次数
+            if (database[i].visitCount >= database[i].maxVisit)
+            {
+                printf("该短地址访问次数已达到上限，已失效！\n");
+                database[i].valid = 0;
+                return;
+            }
+
+            // 更新访问次数
+            database[i].visitCount++;
+
+            printf("\n解析成功！\n");
+            printf("-----------------------------\n");
+            printf("短地址：%s\n", database[i].shortUrl);
+            printf("原始URL：%s\n", database[i].url);
+            printf("访问次数：%d\n", database[i].visitCount);
+            printf("剩余次数：%d\n",
+                   database[i].maxVisit - database[i].visitCount);
+            printf("-----------------------------\n");
+
+            return;
+        }
+    }
+
+    // 没找到
+    printf("未找到该短地址！\n");
 }
-
 // 查看所有
 void showAll()
 {

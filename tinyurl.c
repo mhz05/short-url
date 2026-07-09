@@ -175,11 +175,85 @@ void showAll()
 // 查看统计
 void showStatistics()
 {
+    int i;
 
+    if (databaseSize == 0)
+    {
+        printf("当前没有任何短地址记录！\n");
+        return;
+    }
+
+    printf("\n");
+    printf("===============================================================\n");
+    printf("%-5s %-8s %-10s %-10s %-10s\n",
+           "ID",
+           "Short",
+           "Visit",
+           "MaxVisit",
+           "State");
+    printf("===============================================================\n");
+
+    for (i = 0; i < databaseSize; i++)
+    {
+        printf("%-5d %-8s %-10d %-10d %-10s\n",
+               database[i].id,
+               database[i].shortUrl,
+               database[i].visitCount,
+               database[i].maxVisit,
+               database[i].valid ? "Valid" : "Invalid");
+    }
+
+    printf("===============================================================\n");
 }
 
 // 设置访问次数
 void setMaxVisit()
 {
+    char shortUrl[SHORT_URL_LEN];
+    int maxVisit;
+    int i;
 
+    if (databaseSize == 0)
+    {
+        printf("当前没有任何短地址记录！\n");
+        return;
+    }
+
+    printf("请输入短地址：");
+    scanf("%5s", shortUrl);
+
+    for (i = 0; i < databaseSize; i++)
+    {
+        if (strcmp(shortUrl, database[i].shortUrl) == 0)
+        {
+            printf("当前最大访问次数：%d\n",
+                   database[i].maxVisit);
+
+            printf("请输入新的最大访问次数：");
+            scanf("%d", &maxVisit);
+
+            if (maxVisit <= 0)
+            {
+                printf("输入错误！访问次数必须大于0！\n");
+                return;
+            }
+
+            database[i].maxVisit = maxVisit;
+
+            // 如果新的最大次数大于当前访问次数，则恢复有效
+            if (database[i].visitCount < database[i].maxVisit)
+            {
+                database[i].valid = 1;
+            }
+
+            printf("设置成功！\n");
+            printf("Short URL：%s\n", database[i].shortUrl);
+            printf("新的最大访问次数：%d\n",
+                   database[i].maxVisit);
+
+            return;
+        }
+    }
+
+    printf("未找到该短地址！\n");
 }

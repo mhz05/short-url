@@ -88,7 +88,38 @@ void parseShortURL()
 // 查看所有
 void showAll()
 {
+    int i;
 
+    // 判断是否有数据
+    if (databaseSize == 0)
+    {
+        printf("当前没有任何短地址记录！\n");
+        return;
+    }
+
+    printf("\n");
+    printf("============================================================================================\n");
+    printf("%-5s %-8s %-8s %-10s %-8s %s\n",
+           "ID",
+           "Short",
+           "Visit",
+           "MaxVisit",
+           "Valid",
+           "URL");
+    printf("============================================================================================\n");
+
+    for (i = 0; i < databaseSize; i++)
+    {
+        printf("%-5d %-8s %-8d %-10d %-8s %s\n",
+               database[i].id,
+               database[i].shortUrl,
+               database[i].visitCount,
+               database[i].maxVisit,
+               database[i].valid ? "Yes" : "No",
+               database[i].url);
+    }
+
+    printf("============================================================================================\n");
 }
 
 // 查看统计
